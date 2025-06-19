@@ -1,131 +1,191 @@
+<!DOCTYPE html>
 <html lang="zh-Hans">
-<style>
-    html, body {
-        width: 100%;
-        margin: 0;
-    }
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GitHub 文件加速下载 | 支持 Releases、Raw、Gist 等</title>
+  <meta name="description" content="免费的 GitHub 文件加速下载服务，支持 Releases、Raw、Archive、Gist 等地址，加速下载，无需登录，安全高效。" />
+  <meta name="keywords" content="GitHub 加速, GitHub Proxy, Releases 下载, gist 加速, raw.githubusercontent.com 下载, GitHub 文件代理" />
+  <meta name="author" content="www.catvod.com" />
+  <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg" type="image/svg+xml" />
+  <meta name="theme-color" content="#00bfb3" />
 
-    html {
-        height: 100%;
+  <style>
+    * {
+      box-sizing: border-box;
     }
 
     body {
-        min-height: 100%;
-        padding: 20px;
-        box-sizing: border-box;
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", sans-serif;
+      background: linear-gradient(to right, #00bcd4, #4dd0e1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
+      line-height: 1.6;
     }
 
-    p {
-        word-break: break-all;
+    .container {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+      padding: 40px 30px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      animation: fadeIn 0.6s ease;
     }
 
-    @media (max-width: 500px) {
-        h1 {
-            margin-top: 80px;
-        }
+    h1 {
+      font-size: 1.9rem;
+      margin-bottom: 16px;
+      color: #00bfb3;
     }
 
-    .flex {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+    .description {
+      font-size: 15px;
+      color: #666;
+      margin-bottom: 28px;
     }
 
-    .block {
-        display: block;
-        position: relative;
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .input-group {
+      width: 100%;
     }
 
     .url {
-        font-size: 18px;
-        padding: 10px 10px 10px 5px;
-        position: relative;
-        width: 300px;
-        border: none;
-        border-bottom: 1px solid #bfbfbf;
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 16px;
+      border: 1.5px solid #ccc;
+      border-radius: 8px;
+      transition: all 0.3s;
     }
 
-    input:focus {
-        outline: none;
-    }
-
-    .bar {
-        content: '';
-        height: 2px;
-        width: 100%;
-        bottom: 0;
-        position: absolute;
-        background: #00bfb3;
-        transition: 0.2s ease transform;
-        -moz-transition: 0.2s ease transform;
-        -webkit-transition: 0.2s ease transform;
-        transform: scaleX(0);
-    }
-
-    .url:focus ~ .bar {
-        transform: scaleX(1);
+    .url:focus {
+      border-color: #00bfb3;
+      box-shadow: 0 0 0 3px rgba(0, 191, 179, 0.2);
+      outline: none;
     }
 
     .btn {
-        line-height: 38px;
-        background-color: #00bfb3;
-        color: #fff;
-        white-space: nowrap;
-        text-align: center;
-        font-size: 14px;
-        border: none;
-        border-radius: 2px;
-        cursor: pointer;
-        padding: 5px;
-        width: 160px;
-        margin: 30px 0;
+      padding: 12px;
+      background: #00bfb3;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
     }
 
-    .tips, .example {
-        color: #7b7b7b;
-        position: relative;
-        align-self: flex-start;
-        margin-left: 7.5em;
+    .btn:hover {
+      background: #00a396;
     }
 
-    .example > p:first-child::before {
-        position: absolute;
-        left: -7.5em;
-        content: '合法输入示例：';
-        color: #7b7b7b
+    .footer {
+      margin-top: 32px;
+      font-size: 13px;
+      color: #999;
     }
-</style>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <script>
-        function toSubmit(e) {
-            e.preventDefault()
-            window.open(location.href.substr(0, location.href.lastIndexOf('/') + 1) + document.getElementsByName('q')[0].value);
-            return false
-        }
-    </script>
-    <title>GitHub 文件加速</title>
+
+    .footer a {
+      color: #00bfb3;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .icons {
+      margin-top: 8px;
+    }
+
+    .icons svg {
+      width: 20px;
+      height: 20px;
+      fill: #00bfb3;
+      margin: 0 6px;
+      vertical-align: middle;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+
+  <script>
+    function toSubmit(e) {
+      e.preventDefault();
+      const input = document.querySelector("input[name='q']").value.trim();
+      if (!input) return;
+      const base = location.href.substring(0, location.href.lastIndexOf("/") + 1);
+      window.open(base + input, "_blank");
+    }
+  </script>
 </head>
-<body class="flex">
-<h1 style="margin-bottom: 50px">GitHub 文件加速</h1>
-<form action="./" method="get" style="padding-bottom: 40px" target="_blank" class="flex" onsubmit="toSubmit(event)">
-    <label class="block" style="width: fit-content">
-        <input class="block url" name="q" type="text" placeholder="输入Github文件链接"
-               pattern="^((https|http):\/\/)?(github\.com\/.+?\/.+?\/(?:releases|archive|blob|raw|suites)|((?:raw|gist)\.(?:githubusercontent|github)\.com))\/.+$" required>
-        <div class="bar"></div>
-    </label>
-    <input class="block btn" type="submit" value="下载">
-<div style="text-align: center;">
-    <p>GitHub 文件, Releases, archive, gist, raw.githubusercontent.com 文件代理加速下载服务.</p>
-    <p>联系方式: <a href="mailto:namegenliang@gmail.com">namegenliang@gmail.com</a></p>
-</div>
-</form>
-<div style="text-align: center;">
-  <p>© www.catvod.com. All rights reserved.</p>
-  <p>Github Project: <a href="https://github.com/namegenliang/gh-proxy" target="_blank">gh-proxy</a></p>
-</div>
+
+<body>
+  <main class="container">
+    <h1>GitHub 文件加速</h1>
+    <p class="description">一键加速下载 Releases、Raw、Gist 等 GitHub 文件资源</p>
+
+    <form onsubmit="toSubmit(event)">
+      <div class="input-group">
+        <input
+          class="url"
+          name="q"
+          type="url"
+          inputmode="url"
+          placeholder="粘贴 GitHub 文件链接"
+          pattern="^((https?):\/\/)?(github\.com\/.+?\/.+?\/(?:releases|archive|blob|raw|suites)|((?:raw|gist)\.(?:githubusercontent|github)\.com))\/.+$"
+          required
+        />
+      </div>
+      <button class="btn" type="submit">立即加速下载</button>
+    </form>
+
+    <footer class="footer">
+      <p>联系：<a href="mailto:namegenliang@gmail.com">namegenliang@gmail.com</a></p>
+      <p>项目地址：
+        <a href="https://github.com/namegenliang/gh-proxy" target="_blank" rel="noopener">
+          gh-proxy
+        </a>
+        <span class="icons">
+          <a href="https://github.com/namegenliang" target="_blank" rel="noopener" aria-label="GitHub">
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 005.47 7.59c.4.07.55-.17.55-.38v-1.33C4.16 14.91 3.63 13.5 3.63 13.5c-.36-.91-.88-1.15-.88-1.15-.72-.49.06-.48.06-.48.79.06 1.21.82 1.21.82.71 1.21 1.86.86 2.31.66.07-.52.28-.86.5-1.06-3.33-.38-6.83-1.67-6.83-7.43 0-1.64.58-2.98 1.54-4.03-.15-.38-.67-1.91.15-3.97 0 0 1.26-.4 4.13 1.53A14.4 14.4 0 018 3.13a14.4 14.4 0 013.75.51c2.87-1.93 4.13-1.53 4.13-1.53.82 2.06.3 3.59.15 3.97.96 1.05 1.54 2.39 1.54 4.03 0 5.78-3.5 7.05-6.84 7.42.29.25.54.73.54 1.47v2.18c0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+          </a>
+        </span>
+      </p>
+      <p>© 2025 <a href="https://www.catvod.com" target="_blank" rel="noopener">catvod.com</a></p>
+    </footer>
+  </main>
 </body>
 </html>
